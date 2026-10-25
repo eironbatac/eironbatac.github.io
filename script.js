@@ -136,3 +136,47 @@ document.addEventListener("keydown", (event) => {
 });
 
 });
+
+// =========================
+// NAVBAR ACTIVE LINK ON SCROLL
+// =========================
+
+document.addEventListener("DOMContentLoaded", () => {
+    const navLinks = document.querySelectorAll(".nav-links a[href^='#']");
+    const sections = Array.from(navLinks)
+        .map((link) => {
+            const sectionId = link.getAttribute("href");
+            return document.querySelector(sectionId);
+        })
+        .filter((section) => section !== null);
+
+    if (navLinks.length === 0 || sections.length === 0) {
+        return;
+    }
+
+    function updateActiveLink() {
+        const scrollPosition = window.scrollY + 150;
+        let currentSection = sections[0];
+
+        sections.forEach((section) => {
+            if (section.offsetTop <= scrollPosition) {
+                currentSection = section;
+            }
+        });
+
+        navLinks.forEach((link) => {
+            const isActive =
+                link.getAttribute("href") === `#${currentSection.id}`;
+
+            link.classList.toggle("active", isActive);
+        });
+    }
+
+    window.addEventListener("scroll", updateActiveLink, {
+        passive: true
+    });
+
+    window.addEventListener("load", updateActiveLink);
+
+    updateActiveLink();
+});
